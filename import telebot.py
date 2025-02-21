@@ -36,6 +36,7 @@ def start(message):
     markup.add(types.KeyboardButton('/help'))
     markup.add(types.KeyboardButton('/history'))
     markup.add(types.KeyboardButton('15 крупнейших городов мира'))
+    # markup.add(types.KeyboardButton('/forecast'))
 
     bot.send_message(message.from_user.id,
                      f'Здравствуйте, {message.from_user.full_name}! Это бот прогноза погоды.'
@@ -154,3 +155,41 @@ if __name__ == '__main__':
             bot.polling(none_stop=True, interval=0)
         except Exception as exc:
             logging.error(f'Exception occurred: {exc}')
+
+
+# @bot.message_handler(commands=['forecast'])
+# def handle_forecast(message):
+#     city = message.text.strip().upper()
+#     user_id = message.from_user.id
+#     asyncio.run(add_to_history(user_id, city))
+#     if user_id not in user_history:
+#         user_history[user_id] = []
+#     user_history[user_id].append(city)
+
+#     url = (f'https://api.openweathermap.org/data/2.5/weather?q={city}'
+#            f'&units=metric&lang=ru&appid=79d1ca96933b0328e1c7e3e7a26cb347')
+#     response = requests.get(url)
+#     data = response.json()
+
+#     if response.status_code == 200:
+#         lat = data['coord']['lat']
+#         lon = data['coord']['lon']
+#         forecast_url = (f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}'
+#                         f'&exclude=current,minutely,hourly,alerts&units=metric&lang=ru&appid=79d1ca96933b0328e1c7e3e7a26cb347')
+#         forecast_response = requests.get(forecast_url)
+#         forecast_data = forecast_response.json()
+
+#         if forecast_response.status_code == 200:
+#             forecast_text = "Прогноз на 7 дней:\n"
+#             for day in forecast_data['daily'][:7]:
+#                 day_temp = round(day['temp']['day'])
+#                 day_feels_like = round(day['feels_like']['day'])
+#                 weather_description = day['weather'][0]['description']
+#                 forecast_text += (f"Температура: {day_temp} °C, "
+#                                   f"Ощущается как: {day_feels_like} °C, "
+#                                   f"Погода: {weather_description}\n")
+#             bot.send_message(message.from_user.id, forecast_text)
+#         else:
+#             bot.send_message(message.from_user.id, 'Не удалось получить прогноз погоды на 7 дней.')
+#     else:
+#         bot.send_message(message.from_user.id, 'Город введен не верно!')
